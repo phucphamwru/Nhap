@@ -17,8 +17,8 @@ import { PrivateFilesModule } from 'src/files/privateFiles.module';
           port: 465,
           secure: true,
           auth: {
-            user: configService.get('MAIL_USER'),  //'user@example.com',
-            pass: configService.get('MAIL_PASSWORD'),  //'topsecret',
+            user: configService.get('MAIL_USER'), //'user@example.com',
+            pass: configService.get('MAIL_PASSWORD'), //'topsecret',
           },
         },
         defaults: {
@@ -35,7 +35,7 @@ import { PrivateFilesModule } from 'src/files/privateFiles.module';
       imports: [ConfigModule],
       inject: [ConfigService],
     }),
-    PrivateFilesModule
+    PrivateFilesModule,
   ],
   providers: [MailService],
   exports: [MailService], // 👈 export for DI

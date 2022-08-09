@@ -5,7 +5,6 @@ import { ConfigService } from '@nestjs/config';
 import { config } from 'aws-sdk';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
-//import { AllExceptionsFilter } from './utils/all-exceptions.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

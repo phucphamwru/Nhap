@@ -26,7 +26,7 @@ export class PostsService {
   }
 
   async createPost(user: User, post: CreatePostDto) {
-    const newPost = await this.postsRepository.create({
+    const newPost = this.postsRepository.create({
       ...post,
       author: user,
     });

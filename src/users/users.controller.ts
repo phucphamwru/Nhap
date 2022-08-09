@@ -3,7 +3,6 @@ import {
   Get,
   Param,
   Post,
-  Req,
   Res,
   UploadedFile,
   UseGuards,
@@ -11,11 +10,9 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import JwtAuthenticationGuard from 'src/authentication/jwt-authentication.guard';
-import RequestWithUser from 'src/authentication/requestWithUser.interface';
 import { UsersService } from './users.service';
-import { Express } from 'express';
+import { Express, Response } from 'express';
 import { FindOneParams } from 'src/utils/findOneParams';
-import { Response } from 'express';
 import { CurrentUser } from '../utils/user.decorator';
 import User from '../entities/user.entity';
 

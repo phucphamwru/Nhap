@@ -5,67 +5,81 @@ import { S3 } from 'aws-sdk';
 import { ConfigService } from '@nestjs/config';
 import { v4 as uuid } from 'uuid';
 import PrivateFile from 'src/privateFiles/privateFile.entity';
- 
+
 @Injectable()
 export class PrivateFilesService {
   constructor(
     @InjectRepository(PrivateFile)
     private privateFilesRepository: Repository<PrivateFile>,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
   ) {}
- 
-  async uploadPrivateFile(dataBuffer: Buffer, ownerId: number, filename: string) {
+
+  async uploadPrivateFile(
+    dataBuffer: Buffer,
+    ownerId: number,
+    filename: string,
+  ) {
     const s3 = new S3();
-    const uploadResult = await s3.upload({
-      Bucket: this.configService.get('AWS_PRIVATE_BUCKET_NAME'),
-      Body: dataBuffer,
-      Key: `${uuid()}-${filename}`
-    }).promise();
- 
+    const uploadResult = await s3
+      .upload({
+        Bucket: this.configService.get('AWS_PRIVATE_BUCKET_NAME'),
+        Body: dataBuffer,
+        Key: `${uuid()}-${filename}`,
+      })
+      .promise();
+
     const newFile = this.privateFilesRepository.create({
       key: uploadResult.Key,
       owner: {
-        id: ownerId
-      }
+        id: ownerId,
+      },
     });
     await this.privateFilesRepository.save(newFile);
     return newFile;
   }
 
   async deletePrivateFile(fileId: number) {
-    const file = await this.privateFilesRepository.findOne({ where: {id: fileId} });
+    const file = await this.privateFilesRepository.findOne({
+      where: { id: fileId },
+    });
     const s3 = new S3();
-    await s3.deleteObject({
-      Bucket: this.configService.get('AWS_PRIVATE_BUCKET_NAME'),
-      Key: file.key,
-    }).promise();
+    await s3
+      .deleteObject({
+        Bucket: this.configService.get('AWS_PRIVATE_BUCKET_NAME'),
+        Key: file.key,
+      })
+      .promise();
     await this.privateFilesRepository.delete(fileId);
   }
 
   public async getPrivateFile(fileId: number) {
     const s3 = new S3();
- 
-    const fileInfo = await this.privateFilesRepository.findOne({ where : {id: fileId}, relations: ['owner']});
+
+    const fileInfo = await this.privateFilesRepository.findOne({
+      where: { id: fileId },
+      relations: ['owner'],
+    });
     if (fileInfo) {
-      const stream = await s3.getObject({
-        Bucket: this.configService.get('AWS_PRIVATE_BUCKET_NAME'),
-        Key: fileInfo.key
-      })
+      const stream = s3
+        .getObject({
+          Bucket: this.configService.get('AWS_PRIVATE_BUCKET_NAME'),
+          Key: fileInfo.key,
+        })
         .createReadStream();
       return {
         stream,
         info: fileInfo,
-      }
+      };
     }
     throw new NotFoundException();
   }
 
   public async generatePresignedUrl(key: string) {
     const s3 = new S3();
- 
+
     return s3.getSignedUrlPromise('getObject', {
       Bucket: this.configService.get('AWS_PRIVATE_BUCKET_NAME'),
-      Key: key
-    })
+      Key: key,
+    });
   }
 }

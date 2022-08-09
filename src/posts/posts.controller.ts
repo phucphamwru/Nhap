@@ -12,7 +12,6 @@ import {
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-// import { PostNotFoundException } from './exception/postNotFund.exception';
 import { FindOneParams } from 'src/utils/findOneParams';
 import { Roles } from 'src/utils/roles.decorator';
 import JwtAuthenticationGuard from 'src/authentication/jwt-authentication.guard';

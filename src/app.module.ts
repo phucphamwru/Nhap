@@ -7,14 +7,16 @@ import { UsersModule } from './users/users.module';
 import { AuthenticationModule } from './authentication/authentication.module';
 import * as Joi from '@hapi/joi';
 import { DatabaseModule } from './database/database.module';
-// import { EmailModule } from './email/email.module';
 import { MailModule } from './mail/mail.module';
 import { PrivateFilesModule } from './files/privateFiles.module';
-import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import {
+  APP_FILTER,
+  // APP_GUARD,
+  APP_INTERCEPTOR,
+} from '@nestjs/core';
 import { HttpExceptionFilter } from './utils/http-exception.filter';
-import { RolesGuard } from './utils/roles.guard';
+// import { RolesGuard } from './utils/roles.guard';
 import { LoggingInterceptor } from './utils/logging.interceptor';
-// import { AllExceptionsFilter } from './utils/all-exception.filter';
 
 @Module({
   imports: [

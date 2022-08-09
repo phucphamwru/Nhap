@@ -30,8 +30,6 @@ export class AuthenticationController {
   @Post('log-in')
   async logIn(@CurrentUser() user: User) {
     return this.authenticationService.getCookieWithJwtToken(user.id);
-    // response.setHeader('Set-Cookie', cookie);
-    // return response.send({ user, cookie });
   }
 
   @UseGuards(JwtAuthenticationGuard)
