@@ -11,6 +11,7 @@ import { PrivateFilesService } from 'src/files/privateFiles.service';
 import { MailService } from 'src/mail/mail.service';
 import { Repository } from 'typeorm';
 import CreateUserDto from './dto/create-user.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -20,6 +21,31 @@ export class UsersService {
     private mailService: MailService,
     private readonly privateFilesService: PrivateFilesService,
   ) {}
+
+  async setCurrentRefreshToken(refreshToken: string, userId: number) {
+    const currentHashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+    await this.usersRepository.update(userId, {
+      currentHashedRefreshToken,
+    });
+  }
+
+  async getUserIfRefreshTokenMatches(refreshToken: string, userId: number) {
+    const user = await this.getById(userId);
+    const isRefreshTokenMatching = await bcrypt.compare(
+      refreshToken,
+      user.currentHashedRefreshToken,
+    );
+
+    if (isRefreshTokenMatching) {
+      return user;
+    }
+  }
+
+  async removeRefreshToken(userId: number) {
+    return this.usersRepository.update(userId, {
+      currentHashedRefreshToken: null,
+    });
+  }
 
   async getByEmail(email: string) {
     const user = await this.usersRepository.findOne({ where: { email } });
@@ -35,7 +61,6 @@ export class UsersService {
   async getById(id: number) {
     const user = await this.usersRepository.findOne({ where: { id } });
     if (user) {
-      console.log('user : ', user);
       return user;
     }
     throw new HttpException(

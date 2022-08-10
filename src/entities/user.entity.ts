@@ -28,6 +28,12 @@ class User {
   public password: string;
 
   @Column({
+    nullable: true,
+  })
+  @Exclude()
+  public currentHashedRefreshToken?: string;
+
+  @Column({
     type: 'enum',
     enum: Role,
     default: Role.User,

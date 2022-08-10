@@ -20,41 +20,33 @@ import { CurrentUser } from 'src/utils/user.decorator';
 import User from 'src/entities/user.entity';
 import { RolesGuard } from 'src/utils/roles.guard';
 
+@UseGuards(JwtAuthenticationGuard, RolesGuard)
+@Roles(Role.User)
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Get()
-  // @Roles(Role.User)
   getAllPosts() {
     return this.postsService.getAllPosts();
   }
 
   @Get(':id')
-  @Roles(Role.User)
-  @UseGuards(JwtAuthenticationGuard)
-  // @UseFilters(PostNotFoundException)
   getPostById(@Param() { id }: FindOneParams) {
     return this.postsService.getPostById(Number(id));
   }
 
   @Post()
-  @UseGuards(JwtAuthenticationGuard, RolesGuard)
-  @Roles(Role.Admin)
   async createPost(@CurrentUser() user: User, @Body() post: CreatePostDto) {
     return this.postsService.createPost(user, post);
   }
 
-  // @UseFilters(PostNotFoundException)
   @Patch(':id')
-  @Roles(Role.User)
-  @UseGuards(JwtAuthenticationGuard)
   async updatePost(@Param('id') id: string, @Body() post: UpdatePostDto) {
     return this.postsService.updatePost(Number(id), post);
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthenticationGuard)
   @Roles(Role.Admin)
   async deletePost(@Param('id') id: string) {
     return this.postsService.deletePost(Number(id));

@@ -14,11 +14,16 @@ import JwtAuthenticationGuard from './jwt-authentication.guard';
 import { LocalAuthenticationGuard } from './localAuthentication.guard';
 import User from 'src/entities/user.entity';
 import { CurrentUser } from '../utils/user.decorator';
+import { UsersService } from 'src/users/users.service';
+import JwtRefreshGuard from './jwt-refresh.guard';
 
 @Controller('auth')
 // @UseInterceptors(ClassSerializerInterceptor)
 export class AuthenticationController {
-  constructor(private readonly authenticationService: AuthenticationService) {}
+  constructor(
+    private readonly authenticationService: AuthenticationService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @Post('register')
   async register(@Body() registrationData: RegisterDto) {
@@ -29,18 +34,33 @@ export class AuthenticationController {
   @UseGuards(LocalAuthenticationGuard)
   @Post('log-in')
   async logIn(@CurrentUser() user: User) {
-    return this.authenticationService.getCookieWithJwtToken(user.id);
+    const accessTokenCookie =
+      this.authenticationService.getCookieWithJwtAccessToken(user.id);
+    const refreshToken =
+      this.authenticationService.getCookieWithJwtRefreshToken(user.id);
+
+    await this.usersService.setCurrentRefreshToken(refreshToken, user.id);
+
+    return { accessTokenCookie, refreshToken };
   }
 
   @UseGuards(JwtAuthenticationGuard)
   @Post('log-out')
-  async logOut() {
-    return true;
+  async logOut(@CurrentUser() user: User) {
+    await this.usersService.removeRefreshToken(user.id);
   }
 
   @UseGuards(JwtAuthenticationGuard)
   @Get()
   authenticate(@CurrentUser() user: User) {
     return user;
+  }
+
+  @UseGuards(JwtRefreshGuard)
+  @Get('refresh')
+  refresh(@CurrentUser() user: User) {
+    const accessTokenCookie =
+      this.authenticationService.getCookieWithJwtAccessToken(user.id);
+    return accessTokenCookie;
   }
 }

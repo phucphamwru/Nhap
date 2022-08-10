@@ -16,12 +16,12 @@ import { FindOneParams } from 'src/utils/findOneParams';
 import { CurrentUser } from '../utils/user.decorator';
 import User from '../entities/user.entity';
 
+@UseGuards(JwtAuthenticationGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post('files')
-  @UseGuards(JwtAuthenticationGuard)
   @UseInterceptors(FileInterceptor('file'))
   async addPrivateFile(
     @CurrentUser() user: User,
@@ -35,7 +35,6 @@ export class UsersController {
   }
 
   @Get('files/:id')
-  @UseGuards(JwtAuthenticationGuard)
   async getPrivateFile(
     @CurrentUser() user: User,
     @Param() { id }: FindOneParams,
@@ -46,13 +45,11 @@ export class UsersController {
   }
 
   @Get('files')
-  @UseGuards(JwtAuthenticationGuard)
   async getAllPrivateFiles(@CurrentUser() user: User) {
     return this.usersService.getAllPrivateFiles(user.id);
   }
 
   @Post('files/send-mail-img/:id')
-  @UseGuards(JwtAuthenticationGuard)
   async sendMailImg(@CurrentUser() user: User, @Param() { id }: FindOneParams) {
     return this.usersService.sendMailImg(user, Number(id));
   }
