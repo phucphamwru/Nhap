@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { config } from 'aws-sdk';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -26,6 +27,16 @@ async function bootstrap() {
   // app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
 
   app.use(cookieParser());
+
+  const configSwagger = new DocumentBuilder()
+    .setTitle('Nhap example Title')
+    .setDescription('Nhap API description')
+    .setVersion('1.0')
+    .addTag('nhap Tag')
+    .addBearerAuth()
+    .build();
+  const document = SwaggerModule.createDocument(app, configSwagger);
+  SwaggerModule.setup('api', app, document);
 
   const configService = app.get(ConfigService);
   config.update({

@@ -16,7 +16,10 @@ import User from 'src/entities/user.entity';
 import { CurrentUser } from '../utils/user.decorator';
 import { UsersService } from 'src/users/users.service';
 import JwtRefreshGuard from './jwt-refresh.guard';
+import LogInDto from './dto/login.dto';
+import { ApiTags, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller('auth')
 // @UseInterceptors(ClassSerializerInterceptor)
 export class AuthenticationController {
@@ -32,6 +35,7 @@ export class AuthenticationController {
 
   @HttpCode(200)
   @UseGuards(LocalAuthenticationGuard)
+  @ApiBody({ type: LogInDto })
   @Post('log-in')
   async logIn(@CurrentUser() user: User) {
     const accessTokenCookie =
@@ -44,18 +48,21 @@ export class AuthenticationController {
     return { accessTokenCookie, refreshToken };
   }
 
+  @ApiBearerAuth()
   @UseGuards(JwtAuthenticationGuard)
   @Post('log-out')
   async logOut(@CurrentUser() user: User) {
     await this.usersService.removeRefreshToken(user.id);
   }
 
+  @ApiBearerAuth()
   @UseGuards(JwtAuthenticationGuard)
   @Get()
   authenticate(@CurrentUser() user: User) {
     return user;
   }
 
+  @ApiBearerAuth()
   @UseGuards(JwtRefreshGuard)
   @Get('refresh')
   refresh(@CurrentUser() user: User) {

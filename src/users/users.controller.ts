@@ -15,7 +15,10 @@ import { Express, Response } from 'express';
 import { FindOneParams } from 'src/utils/findOneParams';
 import { CurrentUser } from '../utils/user.decorator';
 import User from '../entities/user.entity';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiTags('Users')
+@ApiBearerAuth()
 @UseGuards(JwtAuthenticationGuard)
 @Controller('users')
 export class UsersController {

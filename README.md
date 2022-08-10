@@ -74,6 +74,10 @@ Nest is [MIT licensed](LICENSE).
 
 
 
+- useFactory :  syntax allows for creating providers dynamically.
+  -> use with 'env' : change env -> Service change.
+
+
 
 
 

@@ -33,6 +33,7 @@
     "@nestjs/passport": "^8.2.2",
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/schedule": "^2.0.1",
+    "@nestjs/swagger": "^6.0.5",
     "@nestjs/typeorm": "^8.1.4",
     "@types/cron": "^2.0.0",
     "aws-sdk": "^2.1166.0",

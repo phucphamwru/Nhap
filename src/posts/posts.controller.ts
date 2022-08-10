@@ -8,6 +8,7 @@ import {
   Delete,
   // UseFilters,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -19,7 +20,11 @@ import { Role } from 'src/utils/role.enum';
 import { CurrentUser } from 'src/utils/user.decorator';
 import User from 'src/entities/user.entity';
 import { RolesGuard } from 'src/utils/roles.guard';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { PageOptionsDto } from 'src/common/dtos';
 
+@ApiTags('Posts')
+@ApiBearerAuth()
 @UseGuards(JwtAuthenticationGuard, RolesGuard)
 @Roles(Role.User)
 @Controller('posts')
@@ -27,8 +32,8 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Get()
-  getAllPosts() {
-    return this.postsService.getAllPosts();
+  async getAllPosts(@Query() pageOptionsDto: PageOptionsDto) {
+    return this.postsService.getAllPosts(pageOptionsDto);
   }
 
   @Get(':id')
