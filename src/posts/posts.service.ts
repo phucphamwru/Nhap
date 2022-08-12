@@ -30,14 +30,8 @@ export class PostsService {
       .skip(skip)
       .take(take);
 
-    console.log('queryBuilder: ', queryBuilder);
-
     const itemCount = await queryBuilder.getCount();
-
-    console.log('itemCount: ', itemCount);
     const { entities } = await queryBuilder.getRawAndEntities();
-
-    console.log('entities: ', entities);
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
 
     return new PageDto(entities, pageMetaDto);
