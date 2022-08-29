@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { S3 } from 'aws-sdk';
 import { ConfigService } from '@nestjs/config';
 import { v4 as uuid } from 'uuid';
-import PrivateFile from 'src/privateFiles/privateFile.entity';
+import PrivateFile from 'src/entities/privateFile.entity';
 
 @Injectable()
 export class PrivateFilesService {

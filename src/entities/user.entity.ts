@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import PrivateFile from 'src/privateFiles/privateFile.entity';
+import PrivateFile from 'src/entities/privateFile.entity';
 import { Role } from 'src/utils/role.enum';
 import {
   Column,

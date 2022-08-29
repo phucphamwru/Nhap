@@ -18,10 +18,8 @@ export class PostsService {
     pageOptionsDto: PageOptionsDto,
   ): Promise<PageDto<PostEntity>> {
     // return this.postsRepository.find({ relations: ['author'] });
-    const { page, skip, take } = pageOptionsDto;
-    console.log('page: ', page);
-    console.log('skip: ', skip);
-    console.log('take: ', take);
+    const { page, take } = pageOptionsDto;
+    const skip = (page - 1) * take;
     const queryBuilder = this.postsRepository.createQueryBuilder('post_entity');
 
     queryBuilder

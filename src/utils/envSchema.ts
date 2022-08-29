@@ -26,4 +26,10 @@ export const envSchema: Joi.ObjectSchema = Joi.object({
   AWS_ACCESS_KEY_ID: Joi.string().required(),
   AWS_SECRET_ACCESS_KEY: Joi.string().required(),
   AWS_PRIVATE_BUCKET_NAME: Joi.string().required(),
+
+  //azure
+  CLOUD_INSTANCE: Joi.string().required(),
+  TENANT_ID: Joi.string().required(),
+  CLIENT_ID: Joi.string().required(),
+  CLIENT_SECRET: Joi.string().required(),
 });
