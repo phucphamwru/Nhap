@@ -14,6 +14,8 @@ export const envSchema: Joi.ObjectSchema = Joi.object({
   // EMAIL_USER: Joi.string().required(),
   // EMAIL_PASSWORD: Joi.string().required(),
 
+  TWO_FACTOR_AUTHENTICATION_APP_NAME: Joi.string().required(),
+
   //mail
   MAIL_HOST: Joi.string().required(),
   MAIL_USER: Joi.string().required(),

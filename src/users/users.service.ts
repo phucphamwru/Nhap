@@ -75,6 +75,18 @@ export class UsersService {
     return newUser;
   }
 
+  async setTwoFactorAuthenticationSecret(secret: string, userId: number) {
+    return this.usersRepository.update(userId, {
+      twoFactorAuthenticationSecret: secret,
+    });
+  }
+
+  async turnOnTwoFactorAuthentication(userId: number) {
+    return this.usersRepository.update(userId, {
+      isTwoFactorAuthenticationEnabled: true,
+    });
+  }
+
   async addPrivateFile(userId: number, imageBuffer: Buffer, filename: string) {
     return this.privateFilesService.uploadPrivateFile(
       imageBuffer,

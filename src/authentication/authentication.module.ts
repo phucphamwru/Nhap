@@ -11,6 +11,9 @@ import { MailModule } from 'src/mail/mail.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import User from 'src/entities/user.entity';
 import { JwtRefreshTokenStrategy } from './jwt-refresh-token.strategy';
+import { TwoFactorAuthenticationController } from './two-factor/twoFactorAuthentication.controller';
+import { TwoFactorAuthenticationService } from './two-factor/twoFactorAuthentication.service';
+import { JwtTwoFactorStrategy } from './jwt-two-factor.strategy';
 
 @Module({
   imports: [
@@ -32,12 +35,14 @@ import { JwtRefreshTokenStrategy } from './jwt-refresh-token.strategy';
       }),
     }),
   ],
-  controllers: [AuthenticationController],
+  controllers: [AuthenticationController, TwoFactorAuthenticationController],
   providers: [
     AuthenticationService,
     LocalStrategy,
     JwtStrategy,
     JwtRefreshTokenStrategy,
+    TwoFactorAuthenticationService,
+    JwtTwoFactorStrategy,
   ],
   exports: [],
 })

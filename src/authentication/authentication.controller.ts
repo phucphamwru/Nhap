@@ -38,6 +38,10 @@ export class AuthenticationController {
   @ApiBody({ type: LogInDto })
   @Post('log-in')
   async logIn(@CurrentUser() user: User) {
+    if (user.isTwoFactorAuthenticationEnabled) {
+      return;
+    }
+
     const accessTokenCookie =
       this.authenticationService.getCookieWithJwtAccessToken(user.id);
     const refreshToken =
