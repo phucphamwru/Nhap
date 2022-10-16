@@ -17,7 +17,10 @@ import { Response } from 'express';
 import { UsersService } from 'src/users/users.service';
 import { TwoFactorAuthenticationDto } from '../dto/twoFactorAuthentication.dto';
 import { AuthenticationService } from '../authentication.service';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('2fa')
+@ApiBearerAuth()
 @Controller('2fa')
 @UseInterceptors(ClassSerializerInterceptor)
 export class TwoFactorAuthenticationController {

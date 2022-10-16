@@ -9,6 +9,9 @@ import {
   // UseFilters,
   UseGuards,
   Query,
+  UseInterceptors,
+  // CacheInterceptor,
+  CacheKey,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -22,6 +25,8 @@ import User from 'src/entities/user.entity';
 import { RolesGuard } from 'src/utils/roles.guard';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { PageOptionsDto } from 'src/common/dtos';
+import { HttpCacheInterceptor } from './httpCache.interceptor';
+import { GET_POSTS_CACHE_KEY } from './postsCacheKey.constant';
 
 @ApiTags('Posts')
 @ApiBearerAuth()
@@ -31,6 +36,9 @@ import { PageOptionsDto } from 'src/common/dtos';
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
+  // @UseInterceptors(CacheInterceptor)   - Auto-caching responses
+  @UseInterceptors(HttpCacheInterceptor)
+  @CacheKey(GET_POSTS_CACHE_KEY)
   @Get()
   async getAllPosts(@Query() pageOptionsDto: PageOptionsDto) {
     return this.postsService.getAllPosts(pageOptionsDto);

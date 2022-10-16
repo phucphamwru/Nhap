@@ -34,4 +34,8 @@ export const envSchema: Joi.ObjectSchema = Joi.object({
   TENANT_ID: Joi.string().required(),
   CLIENT_ID: Joi.string().required(),
   CLIENT_SECRET: Joi.string().required(),
+
+  //redis
+  REDIS_HOST: Joi.string().required(),
+  REDIS_PORT: Joi.number().required(),
 });

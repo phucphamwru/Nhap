@@ -129,3 +129,38 @@ export const Roles = (...roles: string[]) => SetMetadata('roles', roles);
 
 - Read the handler metadata = Reflector class.
 const roles = this.reflector.get<string[]>('roles', context.getHandler());
+
+
+# string -> date:	Date(<string>)
+
+# date -> string: 	Date(...).toString()
+
+
+
+# Caching acts as a temporary data store providing high performance data access.
+- Nest provides a unified API for various cache storage providers. The built-in one is an in-memory data store.
+- De tuong tac voi Cache 0 -> Inject(CACHE_MANAGER) vao class cua minh.
+  ex: constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
+- get() method tu Cach instance dung de lay cac muc tu bo nho Cache.
+  ex: const value = await this.cacheManager.get('key');
+
+- set() method la add them item vao bo nho Cache.
+  ex: await this.cacheManager.set('key', 'value');
+
+- del() method la remove xoa item trong bo nho Cache.
+  ex: await this.cacheManager.del('key');
+
+- reset() method la xoa toan bo item trong Cache.
+  ex: await this.cacheManager.reset();
+
+- The default expiration time of the cache is 5 seconds.
+You can manually specify a TTL (expiration time in seconds) for this specific key, as follows:
+  ex: await this.cacheManager.set('key', 'value', { ttl: 10000 });
+
+# NestJS will store the response of the getPosts method separately for every combination of query params.
+
+- Redis dc sinh ra de giai quyet nhung van de ton tai trong Cache Memory
+  + Applications often run multiple instances of our API 
+  ->  the incoming traffic is load-balanced and redirected to multiple instances.
+  -> keeping the cache within the memory of the application means that multiple instances of our API do not share the same cache
+  -> restarting the API means losing the cache.
