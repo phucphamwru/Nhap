@@ -11,10 +11,16 @@ import * as compression from 'compression';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Helmet
   app.use(helmet());
+
+  // Compression
+  app.use(compression());
+
+  // Cors
   app.enableCors();
 
-  //Pipes
+  // Pipes
   app.useGlobalPipes(
     new ValidationPipe({ transform: true }),
     new ValidationPipe({ skipMissingProperties: true }),
@@ -26,9 +32,6 @@ async function bootstrap() {
   // ** Use Global Exception
   // const { httpAdapter } = app.get(HttpAdapterHost);
   // app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
-
-  // Compression
-  app.use(compression());
 
   app.use(cookieParser());
 

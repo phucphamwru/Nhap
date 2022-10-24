@@ -113,4 +113,13 @@ export class AuthenticationService {
       );
     }
   }
+
+  public async getUserFromAuthenticationToken(token: string) {
+    const payload: TokenPayload = this.jwtService.verify(token, {
+      secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET')
+    });
+    if (payload.userId) {
+      return this.usersService.getById(payload.userId);
+    }
+  }
 }

@@ -17,6 +17,8 @@ import { HttpExceptionFilter } from './utils/http-exception.filter';
 // import { RolesGuard } from './utils/roles.guard';
 import { LoggingInterceptor } from './utils/logging.interceptor';
 import { envSchema } from './utils/envSchema';
+import { ChatModule } from './chat/chat.module';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { envSchema } from './utils/envSchema';
     // EmailModule,
     MailModule,
     PrivateFilesModule,
+    ChatModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [

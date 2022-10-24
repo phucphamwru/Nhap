@@ -22,18 +22,7 @@ import { JwtTwoFactorStrategy } from './jwt-two-factor.strategy';
     MailModule,
     PassportModule,
     ConfigModule,
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get('JWT_ACCESS_TOKEN_SECRET'),
-        signOptions: {
-          expiresIn: `${configService.get(
-            'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
-          )}s`,
-        },
-      }),
-    }),
+    JwtModule.register({}),
   ],
   controllers: [AuthenticationController, TwoFactorAuthenticationController],
   providers: [
@@ -44,6 +33,6 @@ import { JwtTwoFactorStrategy } from './jwt-two-factor.strategy';
     TwoFactorAuthenticationService,
     JwtTwoFactorStrategy,
   ],
-  exports: [],
+  exports: [AuthenticationService],
 })
 export class AuthenticationModule {}
