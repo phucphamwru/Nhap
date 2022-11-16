@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { BullModule } from '@nestjs/bull';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PostsModule } from './posts/posts.module';
@@ -19,12 +20,23 @@ import { LoggingInterceptor } from './utils/logging.interceptor';
 import { envSchema } from './utils/envSchema';
 import { ChatModule } from './chat/chat.module';
 import { EventsModule } from './events/events.module';
+import { OptimizeModule } from './optimize/optimize.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: envSchema,
+    }),
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        redis: {
+          host: configService.get('REDIS_HOST'),
+          port: Number(configService.get('REDIS_PORT')),
+        },
+      }),
+      inject: [ConfigService],
     }),
     DatabaseModule,
     UsersModule,
@@ -35,6 +47,7 @@ import { EventsModule } from './events/events.module';
     PrivateFilesModule,
     ChatModule,
     EventsModule,
+    OptimizeModule,
   ],
   controllers: [AppController],
   providers: [

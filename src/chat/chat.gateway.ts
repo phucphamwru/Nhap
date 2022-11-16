@@ -10,11 +10,15 @@ import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
 
 @WebSocketGateway()
-export class ChatGateway {
+export class ChatGateway implements OnGatewayConnection {
   @WebSocketServer()
   server: Server;
 
   constructor(private readonly chatService: ChatService) {}
+
+  async handleConnection(socket: Socket) {
+    await this.chatService.getUserFromSocket(socket);
+  }
   // async handleConnection(@ConnectedSocket() client: Socket) {
   //   await this.chatService.getUserFromSocket(client);
   // }
@@ -25,10 +29,12 @@ export class ChatGateway {
     @ConnectedSocket() socket: Socket,
   ) {
     const author = await this.chatService.getUserFromSocket(socket);
+    const message = await this.chatService.saveMessage(content, author);
 
     this.server.sockets.emit('receive_message', {
       content,
       author,
+      message,
     });
   }
 
